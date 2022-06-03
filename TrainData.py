@@ -170,22 +170,24 @@ def doPerson(ppl, key):
 # Show some faces for one person, but limit to what fits on the screen
 #
 
-def plotPerson(name, images, labels, ttl):
-  '''Use plot library to visualize some faces'''
-  fig = plt.figure(figsize=(15,9))    # width, height in inches
-  ax = plt.axes(label=f'Training Samples for {name}')    # Doesn't do anything :(
+def plotPerson(name, images, labels):
+  '''Visualize faces and save them to image folders'''
+  savePath = rf'./persons/{name}'
+  if not os.path.exists(savePath):
+    os.makedirs(savePath)
+
 
   count = len(images)
-  if count > 50: count = 50
+  count = 20
   for i in range(count):
     print(i)
-    plt.subplot(5, 10, i+1)    # rows, columns, index
     plt.xticks([])
     plt.yticks([])
     plt.grid(False)
     plt.imshow(images[i])
-    plt.xlabel(f'{ttl} {labels[i]:.2f}')
-    
+    plt.axis('off')
+    #plt.xlabel(f'{ttl} {labels[i]:.0f}')
+    plt.savefig(f'./persons/{name}/{labels[i]:.0f}_{i}_{arg}.png', bbox_inches='tight', pad_inches=0)
   plt.show()
 
 #
@@ -208,7 +210,7 @@ for arg in sys.argv[1:]:
   (images,labels) = result
 
 # model = AgeModel.TrainModel(images, labels)
-  plotPerson(arg, images, labels, "Age =")
+  plotPerson(arg, images, labels)
 
   # Now, let's run our model on pix with no dates
   pix = loadPerson(arg, False)
